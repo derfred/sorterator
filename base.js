@@ -1,7 +1,13 @@
-var sys = require('fs');
+var fs = require('fs');
+
+function currentDate() {
+  var now = new Date();
+  return now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate()+"-"+now.getHours()+"-"+now.getMinutes();
+}
 
 function Game() {
   this.players = {};
+  this.start = false;
 }
 
 Game.prototype.initialize = function(total) {
@@ -37,49 +43,73 @@ Game.prototype.finished = function() {
 }
 
 Game.prototype.finish = function() {
+  this.dump_clicks();
+
   this.initialized = false;
+  this.start = false;
+
   this.all_players(function(player) {
     player.reset();
   });
 }
 
-Game.prototype.valid_click = function(player_id, number) {
-  var player = this.players[player_id];
+Game.prototype.dump_clicks = function() {
+  var result = [];
+  result.push("time;delta;name;number");
 
-  // first check if this is the first click for this player
-  // then he can choose any number
-  if(player.last_number() == undefined) {
-    return true;
-  }
-  
-  // then check if it has been clicked by anyone already
-  if(this.remaining_numbers.indexOf(number) == -1) {
-    return false;
-  }
+  var prev = 0;
+  var clicks = this.clicks_in_order();
 
-  // then check if it is consequtive to a number any one else just clicked
-  // adjust this for different rules
-  for(id in this.players) {
-    var last_number = this.players[id].last_number();
-    if(last_number) {
-      if(last_number == this.numbers.length && number == 1) {
-        return true;
-      } else if(last_number+1 == number) {
-        return true;
-      }
-    }
+  for(var i=0;i<clicks.length;i++) {
+    var delta = clicks[i].timestamp - prev;
+    result.push(clicks[i].timestamp+";"+delta+";"+clicks[i].player.name+";"+clicks[i].number);
+    prev = clicks[i].timestamp;
   }
 
-  // else this fails
-  return false;
+  fs.writeFile(currentDate()+".csv", result.join("\n"));
 }
 
-Game.prototype.click = function(id, number, timestamp) {
+Game.prototype.valid_click = function(player_id, number) {
+  // first click, only accept 1
+  if(this.remaining_numbers.length == this.numbers.length) {
+    return number == 1;
+  }
+
+  var clicks = this.clicks_in_order();
+  clicks.reverse();
+  return clicks[0].number+1 == number;
+}
+
+Game.prototype.click = function(id, number) {
+  var now = new Date().getTime();
+  if(this.start == false) {
+    this.start = now;
+  }
+
   var index = this.remaining_numbers.indexOf(number);
   if(index != -1) {
     this.remaining_numbers.splice(index, 1);
-    this.players[id].click(number, timestamp);
+    this.players[id].click(number, (now-this.start));
   }
+}
+
+Game.prototype.clicks_in_order = function() {
+  var result = [];
+  this.all_players(function(player) {
+    for(var i=0;i<player.clicks.length;i++) {
+      result.push({
+        player: player,
+        number: player.clicks[i].number,
+        timestamp: player.clicks[i].timestamp
+      });
+    }
+  });
+
+  result.sort(function(a, b) {
+    return a.timestamp-b.timestamp;
+  });
+
+  return result;
 }
 
 

@@ -49,7 +49,7 @@ GameServer.prototype.message_registration = function(client, data) {
 GameServer.prototype.message_click = function(client, data) {
   var number = parseInt(data.number);
   if(this.game.valid_click(client.sessionId, number)) {
-    this.game.click(client.sessionId, number, parseInt(data.timestamp));
+    this.game.click(client.sessionId, number);
     
     this.socket.broadcast(json({
       "action": "clicked",

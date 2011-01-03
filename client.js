@@ -110,14 +110,8 @@ Client.prototype.click = function(evt) {
     return;
   }
 
-  var now = new Date().getTime();
-  if(this.start == false) {
-    this.start = now;
-  }
-
   this.socket.send(json({
     "action": "click",
-    "number": target.html(),
-    "timestamp": (now-this.start)
+    "number": target.html()
   }));
 }
