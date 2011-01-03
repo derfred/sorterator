@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>The Sorterator - Sort till you drop</title>
+    <link rel="stylesheet" href="/style.css" type="text/css" media="screen" charset="utf-8">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/json2.js"></script>
+    <script src="/client.js"></script>
+    <script language="javascript">
+      var client = undefined;
+      $(function() {
+        client = new Client(8000);
+        client.run();
+      });
+    </script>
+  </head>
+  <body>
+    <a href='#' id='reset'>Reset</a>
+
+    <div id="connecting">Connecting....</div>
+
+    <form id="initialization" class="initially_hidden">
+      <h2>Please initialize the Game</h2>
+      <p>
+        <label>Number of boxes</label>
+        <input type="text" name="number">
+      </p>
+      <input type="submit">
+    </form>
+
+    <form id="registration" class="initially_hidden">
+      <h2>Please register yourself</h2>
+      <p>
+        <label>Your Name</label>
+        <input type="text" name="player_name">
+      </p>
+      <input type="submit">
+    </form>
+
+    <div id="board">
+
+    </div>
+
+    <div id="finished" class="initially_hidden">
+      <h2>Game Over</h2>
+      <p>Reload this page to play again</p>
+    </div>
+
+  </body>
+</html>
