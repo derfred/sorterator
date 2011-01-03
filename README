@@ -7,7 +7,7 @@ Installation:
 
  1. Install node.js
  2. Run "node server.js"
- 3. Open "http://localhost:8000"
+ 3. Open http://localhost:8000
 
 
 Results writing:
