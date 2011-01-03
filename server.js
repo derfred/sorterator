@@ -63,8 +63,6 @@ GameServer.prototype.message_click = function(client, data) {
 
       this.game.finish();
     }
-  } else {
-    sys.puts("invalid click")
   }
 }
 

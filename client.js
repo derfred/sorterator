@@ -44,7 +44,6 @@ Client.prototype.connected = function() {
 // actions coming from the server
 Client.prototype.message = function(msg) {
   var data = JSON.parse(msg);
-  console.log(data)
   if(typeof(this["message_"+data.action]) == "function") {
     this["message_"+data.action](data);
   }
