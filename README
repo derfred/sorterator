@@ -1,0 +1,17 @@
+Sorterator - Basic Collaborative Sorting Game
+---------------------------------------------
+
+Requires node.js available at http://nodejs.org and a Browser. Tested with version 0.3.2 of node and Firefox 3.6.
+
+Installation:
+
+ 1. Install node.js
+ 2. Run "node server.js"
+ 3. Open "http://localhost:8000"
+
+
+Results writing:
+
+After every completed game a file with a name of the format YYYY-MM-DD-HH-MM.csv is written to the current directory. It lists every click on a line in the following format:
+
+   timestamp;diff to previous timestamp;player name;number
