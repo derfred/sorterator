@@ -50,7 +50,7 @@ Client.prototype.message_require_initialization = function(data) {
 
 Client.prototype.message_lay_board = function(data) {
   $("#board *").remove();
-  $("#board").width(Math.ceil(Math.sqrt(data.numbers.length))*100);
+  $("#board").width(Math.ceil(Math.sqrt(data.numbers.length))*300);
 
   var board = $("#board");
   for(num in data.numbers) {

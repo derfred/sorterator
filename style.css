@@ -21,8 +21,8 @@ a#reset {
 #board a {
   display: block;
   float: left;
-  width: 30px;
-  height: 30px;
+  width: 100px;
+  height: 100px;
   padding: 20px;
   margin: 10px;
   border: 1px solid #999;
