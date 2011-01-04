@@ -1,32 +1,21 @@
-if(typeof(Function.prototype.bind) != "function") {
-  Function.prototype.bind = function(self, var_args) {
-    var thisFunc = this;
-    var leftArgs = Array.slice(arguments, 1);
-    return function(var_args) {
-      var args = leftArgs.concat(Array.slice(arguments, 0));
-      return thisFunc.apply(self, args);
-    };
-  };
-}
-
 var json = JSON.stringify;
 
 function Client(port) {
-  this.socket = new io.Socket('localhost', {
+  this.socket = new io.Socket(null, {
     port: port,
-    transports: ["xhr-multipart"]
+    rememberTransport: false
   });
 
   if(this.socket.connect()) {
-    this.socket.on('connect', this.connected.bind(this));
-    this.socket.on('message', this.message.bind(this));
+    this.socket.on('connect', $.proxy(this.connected, this));
+    this.socket.on('message', $.proxy(this.message, this));
   }
 
-  $("#registration").submit(this.register.bind(this));
-  $("#initialization").submit(this.initialize.bind(this));
-  $("a#reset").click(this.reset.bind(this));
+  $("#registration").submit($.proxy(this.register, this));
+  $("#initialization").submit($.proxy(this.initialize, this));
+  $("a#reset").click($.proxy(this.reset, this));
 
-  $("#board a").live("click", this.click.bind(this));
+  $("#board a").live("click", $.proxy(this.click, this));
 
   // this tracks the start click time
   this.start = false;
