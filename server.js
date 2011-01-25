@@ -75,6 +75,10 @@ GameServer.prototype.handle_message = function(client, msg) {
   }
 }
 
+GameServer.prototype.handle_players = function(request) {
+  return json(this.game.all_players());
+}
+
 GameServer.prototype.request_handler_for = function(request) {
   var handler = this["handle_"+request.url.substring(1)];
   if(typeof(handler) == "function") {

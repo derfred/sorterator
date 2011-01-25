@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>The Sorterator - Sort till you drop</title>
+    <link rel="stylesheet" href="/style.css" type="text/css" media="screen" charset="utf-8">
+    <script type="text/javascript" src="/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/client.js"></script>
+    <script type="text/javascript" src="/admin.js"></script>
+    <script type="text/javascript">
+      var admin_client = undefined;
+      $(function() {
+        admin_client = new AdminClient(8000);
+        admin_client.update_users();
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Sorterator Admin Interface</h1>
+    <div id="empty_user_list">
+      No users have registered with the server so far.
+    </div>
+    <div id="user_list" class="hidden">
+      
+    </div>
+  </body>
+</html>
