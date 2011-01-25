@@ -37,9 +37,15 @@ Game.prototype.unregister_player = function(id) {
 }
 
 Game.prototype.all_players = function(callback) {
+  var result = [];
   for(id in this.players) {
-    callback(this.players[id]);
+    if(callback) {
+      callback(this.players[id]);
+    } else {
+      result.push(this.players[id]);
+    }
   }
+  return result
 }
 
 Game.prototype.finished = function() {
