@@ -1,3 +1,5 @@
+var json = JSON.stringify;
+
 function AdminClient(port) {
   this.socket = new io.Socket(null, {
     port: port,
@@ -7,6 +9,8 @@ function AdminClient(port) {
   if(this.socket.connect()) {
     this.socket.on('message', $.proxy(this.message, this));
   }
+
+  $("#player_list a").live("click", $.proxy(this.kick_player, this));
 }
 
 AdminClient.prototype.update_players = function() {
@@ -29,6 +33,15 @@ AdminClient.prototype.update_players_div = function(players) {
       $("<li>"+players[i].name+" <a href='"+players[i].id+"'>Kick</a></li>").appendTo("#player_list");
     }
   }
+}
+
+
+AdminClient.prototype.kick_player = function(e) {
+  e.preventDefault();
+  this.socket.send(json({
+    "action": "kick_player",
+    "id": $(e.target).attr("href")
+  }));
 }
 
 

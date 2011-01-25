@@ -54,6 +54,13 @@ Client.prototype.message_clicked = function(data) {
   $("#board #n"+data.number).addClass("clicked");
 }
 
+Client.prototype.message_reset = function(data) {
+  $("#please_wait").hide();
+  $("#finished").hide();
+  $("#board *").remove();
+  $("#registration").show();
+}
+
 Client.prototype.message_finished = function(data) {
   $("#finished").show();
 }

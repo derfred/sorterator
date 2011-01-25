@@ -10,6 +10,7 @@ var http = require('http'),
 
 function GameServer() {
   this.game = new base.Game();
+  this.clients = {};
 }
 
 GameServer.prototype.listen = function(port) {
@@ -19,6 +20,7 @@ GameServer.prototype.listen = function(port) {
   this.socket = io.listen(this.server);
   var game_server = this;
   this.socket.on('connection', function(client) {
+    this.clients[client.sessionId] = client;
     client.on('message', game_server.handle_message.bind(game_server, client));
     client.on('disconnect', this.disconnect.bind(this, client));
   }.bind(this));
@@ -27,6 +29,7 @@ GameServer.prototype.listen = function(port) {
 GameServer.prototype.disconnect = function(client) {
   this.game.unregister_player(client.sessionId);
   this.broadcast_update_players();
+  delete this.clients[client.sessionId];
 }
 
 GameServer.prototype.broadcast_update_players = function() {
@@ -50,6 +53,16 @@ GameServer.prototype.message_registration = function(client, data) {
     "action": "wait"
   }));
   this.broadcast_update_players();
+}
+
+GameServer.prototype.message_kick_player = function(client, data) {
+  if(this.clients[data.id]) {
+    this.clients[data.id].send(json({
+      "action": "reset"
+    }));
+    this.game.unregister_player(data.id);
+    this.broadcast_update_players();
+  }
 }
 
 GameServer.prototype.message_click = function(client, data) {
