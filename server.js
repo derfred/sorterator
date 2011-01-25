@@ -78,9 +78,26 @@ GameServer.prototype.handle_message = function(client, msg) {
   }
 }
 
+GameServer.prototype.request_handler_for = function(request) {
+  var handler = this["handle_"+request.url.substring(1)];
+  if(typeof(handler) == "function") {
+    return handler.bind(this);
+  } else {
+    return false;
+  }
+}
+
 GameServer.prototype.handle_request = function(request, response) {
   if(request.url == "/") {
     this.serve_static_file(response, "index.html");
+  } else if(this.request_handler_for(request)) {
+    try {
+      var body = this.request_handler_for(request)(request, response);
+      response.writeHeader(200);
+      response.end(body);
+    } catch(err) {
+      this.serve_error(err)
+    }
   } else {
     var uri = url.parse(request.url).pathname;
     var filename = path.join(process.cwd(), uri);
