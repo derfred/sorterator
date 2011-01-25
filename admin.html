@@ -10,17 +10,31 @@
       var admin_client = undefined;
       $(function() {
         admin_client = new AdminClient(8000);
-        admin_client.update_users();
+        admin_client.update_players();
       });
     </script>
   </head>
   <body>
     <h1>Sorterator Admin Interface</h1>
-    <div id="empty_user_list">
+    <h2>List of Players</h2>
+    <div id="empty_player_list" class="player_lists">
       No users have registered with the server so far.
     </div>
-    <div id="user_list" class="hidden">
+    <ul id="player_list" class="player_lists">
       
-    </div>
+    </ul>
+    <h2>Game Controls</h2>
+    <form id="initialization">
+      <label>Number of Tiles</label>
+      <select name="number_of_tiles" id="number_of_tiles">
+        <option>1</option>
+        <option>4</option>
+        <option>16</option>
+        <option>25</option>
+        <option>36</option>
+        <option>49</option>
+      </select>
+      <input type="submit" value="Initialize">
+    </form>
   </body>
 </html>
