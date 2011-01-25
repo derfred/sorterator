@@ -27,9 +27,13 @@ Game.prototype.initialize = function(total) {
 }
 
 Game.prototype.register_player = function(id, name) {
-  var player = new Player(name);
+  var player = new Player(name, id);
   this.players[id] = player;
   return player;
+}
+
+Game.prototype.unregister_player = function(id) {
+  delete this.players[id];
 }
 
 Game.prototype.all_players = function(callback) {
@@ -113,8 +117,9 @@ Game.prototype.clicks_in_order = function() {
 }
 
 
-function Player(name) {
+function Player(name, id) {
   this.name = name;
+  this.id = id;
   this.clicks = [];
 }
 
