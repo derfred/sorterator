@@ -12,6 +12,10 @@ function GameServer() {
   this.game = new base.Game();
 }
 
+GameServer.prototype.disconnect = function(client) {
+  this.game.unregister_player(client.sessionId);
+}
+
 GameServer.prototype.listen = function(port) {
   this.server = http.createServer(this.handle_request.bind(this));
   this.server.listen(port);
@@ -20,29 +24,22 @@ GameServer.prototype.listen = function(port) {
   var game_server = this;
   this.socket.on('connection', function(client){
     client.on('message', game_server.handle_message.bind(game_server, client));
-  });
-}
-
-GameServer.prototype.message_inquire = function(client, data) {
-  if(this.game.initialized) {
-    client.send(json({ "action": "require_registration" }));
-  } else {
-    client.send(json({ "action": "require_initialization" }));
-  }
+    client.on('disconnect', this.disconnect.bind(this, client));
+  }.bind(this));
 }
 
 GameServer.prototype.message_initialization = function(client, data) {
   this.game.initialize(parseInt(data.total));
   this.socket.broadcast(json({
-    "action": "require_registration"
+    "action": "lay_board",
+    "numbers": this.game.numbers
   }));
 }
 
 GameServer.prototype.message_registration = function(client, data) {
   this.game.register_player(client.sessionId, data.name);
   client.send(json({
-    "action": "lay_board",
-    "numbers": this.game.numbers
+    "action": "wait"
   }));
 }
 

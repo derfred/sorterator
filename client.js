@@ -12,8 +12,6 @@ function Client(port) {
   }
 
   $("#registration").submit($.proxy(this.register, this));
-  $("#initialization").submit($.proxy(this.initialize, this));
-  $("a#reset").click($.proxy(this.reset, this));
 
   $("#board a").live("click", $.proxy(this.click, this));
 
@@ -27,7 +25,7 @@ Client.prototype.run = function() {
 
 Client.prototype.connected = function() {
   $("#connecting").hide();
-  this.socket.send(json({"action": "inquire"}));
+  $("#registration").show();
 }
 
 // actions coming from the server
@@ -38,14 +36,8 @@ Client.prototype.message = function(msg) {
   }
 }
 
-Client.prototype.message_require_registration = function(data) {
-  $("#board *").remove();
-  $("#registration").show();
-  $("#initialization").hide();
-}
-
-Client.prototype.message_require_initialization = function(data) {
-  $("#initialization").show();
+Client.prototype.message_wait = function(data) {
+  $("#please_wait").show();
 }
 
 Client.prototype.message_lay_board = function(data) {
@@ -64,14 +56,6 @@ Client.prototype.message_clicked = function(data) {
 
 Client.prototype.message_finished = function(data) {
   $("#finished").show();
-}
-
-// actions coming from the player
-Client.prototype.reset = function(evt) {
-  evt.preventDefault();
-  $("#initialization").show();
-  $("#finished").hide();
-  $("#board *").remove();
 }
 
 Client.prototype.register = function(evt) {
