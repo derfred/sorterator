@@ -12,20 +12,28 @@ function GameServer() {
   this.game = new base.Game();
 }
 
-GameServer.prototype.disconnect = function(client) {
-  this.game.unregister_player(client.sessionId);
-}
-
 GameServer.prototype.listen = function(port) {
   this.server = http.createServer(this.handle_request.bind(this));
   this.server.listen(port);
 
   this.socket = io.listen(this.server);
   var game_server = this;
-  this.socket.on('connection', function(client){
+  this.socket.on('connection', function(client) {
     client.on('message', game_server.handle_message.bind(game_server, client));
     client.on('disconnect', this.disconnect.bind(this, client));
   }.bind(this));
+}
+
+GameServer.prototype.disconnect = function(client) {
+  this.game.unregister_player(client.sessionId);
+  this.broadcast_update_players();
+}
+
+GameServer.prototype.broadcast_update_players = function() {
+  this.socket.broadcast(json({
+    "action": "update_players",
+    "players": this.game.all_players()
+  }));
 }
 
 GameServer.prototype.message_initialization = function(client, data) {
@@ -41,6 +49,7 @@ GameServer.prototype.message_registration = function(client, data) {
   client.send(json({
     "action": "wait"
   }));
+  this.broadcast_update_players();
 }
 
 GameServer.prototype.message_click = function(client, data) {
