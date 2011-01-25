@@ -11,6 +11,7 @@ function AdminClient(port) {
   }
 
   $("#player_list a").live("click", $.proxy(this.kick_player, this));
+  $("#initialization").submit($.proxy(this.start_game, this))
 }
 
 AdminClient.prototype.update_players = function() {
@@ -35,6 +36,14 @@ AdminClient.prototype.update_players_div = function(players) {
   }
 }
 
+
+AdminClient.prototype.start_game = function(e) {
+  e.preventDefault();
+  this.socket.send(json({
+    "action": "start_game",
+    "total": $("#total").val()
+  }));
+}
 
 AdminClient.prototype.kick_player = function(e) {
   e.preventDefault();

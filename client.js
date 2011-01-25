@@ -41,6 +41,8 @@ Client.prototype.message_wait = function(data) {
 }
 
 Client.prototype.message_lay_board = function(data) {
+  this.start_countdown();
+
   $("#board *").remove();
   $("#board").width(Math.ceil(Math.sqrt(data.numbers.length))*300);
 
@@ -56,6 +58,7 @@ Client.prototype.message_clicked = function(data) {
 
 Client.prototype.message_reset = function(data) {
   $("#please_wait").hide();
+  $("#get_ready").hide();
   $("#finished").hide();
   $("#board *").remove();
   $("#registration").show();
@@ -63,6 +66,23 @@ Client.prototype.message_reset = function(data) {
 
 Client.prototype.message_finished = function(data) {
   $("#finished").show();
+}
+
+Client.prototype.start_countdown = function() {
+  $("#please_wait").hide();
+  $("#get_ready").show();
+
+  $("#countdown").html(3);
+  setTimeout(function() {
+    $("#countdown").html(2);
+  }, 1000);
+  setTimeout(function() {
+    $("#countdown").html(1);
+  }, 2000);
+  setTimeout($.proxy(function() {
+    $("#get_ready").hide();
+    this.socket.send(json({"action": "game_started"}));
+  }, this), 3000);
 }
 
 Client.prototype.register = function(evt) {

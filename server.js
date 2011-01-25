@@ -39,7 +39,7 @@ GameServer.prototype.broadcast_update_players = function() {
   }));
 }
 
-GameServer.prototype.message_initialization = function(client, data) {
+GameServer.prototype.message_start_game = function(client, data) {
   this.game.initialize(parseInt(data.total));
   this.socket.broadcast(json({
     "action": "lay_board",
@@ -69,7 +69,7 @@ GameServer.prototype.message_click = function(client, data) {
   var number = parseInt(data.number);
   if(this.game.valid_click(client.sessionId, number)) {
     this.game.click(client.sessionId, number);
-    
+
     this.socket.broadcast(json({
       "action": "clicked",
       "number": number

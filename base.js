@@ -11,6 +11,10 @@ function Game() {
 }
 
 Game.prototype.initialize = function(total) {
+  this.all_players(function(player) {
+    player.reset();
+  });
+
   var numbers = [];
   for(var i=1;i<=total;i++) {
     numbers.push(i);
