@@ -153,11 +153,27 @@ GameServer.prototype.serve_static_file = function(response, filename) {
         this.serve_error(response, err);
         return;
       }
-
-      response.writeHeader(200);
-      response.end(file);
+      var trans_properties = this.identify(filename);
+      response.writeHeader(200, trans_properties.header);
+      response.end(file, trans_properties.encoding);
     }.bind(this));
   }.bind(this));
+}
+
+GameServer.prototype.identify = function(filename) {
+  if(filename.match(/\.mp3$/)) {
+    return {
+      encoding: "binary",
+      header: {"Content-Type": "audio/mpeg"}
+    };
+  } else if(filename.match(/\.ogg$/)) {
+    return {
+      encoding: "binary",
+      header: {"Content-Type": "audio/vorbis"}
+    };
+  } else {
+    return {};
+  }
 }
 
 // start the server
