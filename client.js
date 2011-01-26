@@ -44,12 +44,17 @@ Client.prototype.message_lay_board = function(data) {
   this.start_countdown();
 
   $("#board *").remove();
-  $("#board").width(Math.ceil(Math.sqrt(data.numbers.length))*300);
 
   var board = $("#board");
   for(num in data.numbers) {
     $("<a href='#' id='n"+data.numbers[num]+"'>"+data.numbers[num]+"</a>").appendTo(board);
   }
+
+  var number = Math.ceil(Math.sqrt(data.numbers.length));
+  var side = 700/number;    // 700 is the height of the screen in pixels
+  console.log("hier", side)
+  $("#board a").width(side-65).height(side-65);
+  $("#board").width(side*number);
 }
 
 Client.prototype.message_clicked = function(data) {
