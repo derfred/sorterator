@@ -10,6 +10,10 @@
       $(function() {
         client = new Client(8000);
         client.run();
+
+        document.ontouchmove = function(e) {
+          e.preventDefault();
+        }
       });
     </script>
   </head>
